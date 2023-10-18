@@ -17,5 +17,8 @@ export default yargs(process.argv.slice(2))
   .option('s', {
     alias: 'segmento', describe: 'tipo de segmento', type: 'string', demandOption: true,
   })
+  .option('j', {
+    alias: 'json', describe: 'cria arquivo json', type: 'boolean', demandOption: false,
+  })
   .example('$0 -F "./cnabExample.rem" -f 21 -t 34 -s p -n Rede', 'lista a linha e campo que from e to do cnab passado via -F e filtrando pelo nome da empresa')
   .argv;
