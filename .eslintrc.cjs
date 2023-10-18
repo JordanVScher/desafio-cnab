@@ -22,6 +22,9 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'import/extensions': 'never',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+    ],
   },
 };
