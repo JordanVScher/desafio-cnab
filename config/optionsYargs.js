@@ -2,6 +2,9 @@ import yargs from 'yargs';
 
 export default yargs(process.argv.slice(2))
   .usage('Uso: $0 [options]')
+  .option('name', {
+    alias: 'n', describe: 'nome da empresa a ser buscado', type: 'string', demandOption: true,
+  })
   .option('file', {
     alias: 'F', describe: 'URL do arquivo Cnab a ser lido', type: 'string', demandOption: true,
   })
