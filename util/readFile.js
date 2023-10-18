@@ -1,39 +1,44 @@
-import { readFile } from 'fs/promises';
+import { existsSync, readFileSync } from 'fs';
 import sliceArrayPosition from './sliceArrayPosition.js';
 import messageLog from './messageLog.js';
 
-const { log } = console;
+const { log, error } = console;
 
-export default (fileName, { segmento, from, to }) => {
-  readFile(fileName, 'utf8')
-    .then((file) => {
-      const cnabArray = file.split('\n');
+const checkValidPath = (filePath) => {
+  if (!existsSync(filePath)) {
+    error(`Error: File on path "${filePath}" not found`);
+    process.exit(1);
+  }
+};
 
-      // const cnabHeader = sliceArrayPosition(cnabArray, 0, 2);
+const getWhichSegmentoToUse = (allSegmentos, segmentoType) => {
+  const segmentoDictionary = { P: 0, Q: 1, R: 2 };
+  const segmentoIndex = segmentoDictionary[segmentoType];
+  return allSegmentos[segmentoIndex];
+};
 
-      const [
-        cnabBodySegmentoP,
-        cnabBodySegmentoQ,
-        cnabBodySegmentoR,
-      ] = sliceArrayPosition(cnabArray, 2, -2);
+export default (filePath, { segmento, from, to }) => {
+  try {
+    const segmentoUpperCase = segmento.toUpperCase();
+    checkValidPath(filePath);
 
-      // const cnabTail = sliceArrayPosition(cnabArray, -2);
+    const file = readFileSync(filePath, 'utf8');
+    const cnabArray = file.split('\n');
 
-      if (segmento === 'p') {
-        log(messageLog(cnabBodySegmentoP, 'P', from, to));
-        return;
-      }
+    const segmentoSize = 3;
+    let segmentoStartIndex = 2;
+    let segmentoEndIndex = segmentoStartIndex + segmentoSize;
 
-      if (segmento === 'q') {
-        log(messageLog(cnabBodySegmentoQ, 'Q', from, to));
-        return;
-      }
+    while (cnabArray.length > segmentoEndIndex) {
+      const allSegmentos = sliceArrayPosition(cnabArray, segmentoStartIndex, segmentoEndIndex);
+      const segmentoToUse = getWhichSegmentoToUse(allSegmentos, segmentoUpperCase);
 
-      if (segmento === 'r') {
-        log(messageLog(cnabBodySegmentoR, 'R', from, to));
-      }
-    })
-    .catch((error) => {
-      log('🚀 ~ file: cnabRows.js ~ line 76 ~ error', error);
-    });
+      log(messageLog(segmentoToUse, segmentoUpperCase, from, to));
+
+      segmentoStartIndex += segmentoSize;
+      segmentoEndIndex += segmentoSize;
+    }
+  } catch (e) {
+    error(`🚀 ~ ${e.stack}`);
+  }
 };
