@@ -14,8 +14,8 @@ const getWhichSegmentoToUse = (allSegmentos, segmentoType) => {
 };
 
 const searchEmpresaName = (allSegmentos, empresaName) => {
-  const cnabBodySegmentoQ = allSegmentos[segmentoDictionary.Q];
-  const segmentoQName = cnabBodySegmentoQ.substring(companyNameIndexStart, companyNameIndexEnd);
+  const cnabSegmentoQ = allSegmentos[segmentoDictionary.Q];
+  const segmentoQName = cnabSegmentoQ.substring(companyNameIndexStart, companyNameIndexEnd);
   const empresaNameRegex = new RegExp(empresaName, 'gsi');
 
   return segmentoQName.match(empresaNameRegex);
@@ -31,31 +31,28 @@ export default (filePath, {
     const cnabArray = file.split('\n');
 
     let oneResultFound = false;
+    let shouldCountEntry = true;
     const segmentoSize = 3;
     let segmentoStartIndex = 2;
     let segmentoEndIndex = segmentoStartIndex + segmentoSize;
 
     while (cnabArray.length > segmentoEndIndex) {
+      if (!oneResultFound) {
+        oneResultFound = !oneResultFound;
+        if (name) log(`Mostrando resultado(s) para busca "${name}":`);
+        else log('Mostrando resultado(s):');
+      }
+
       const allSegmentos = sliceArrayPosition(cnabArray, segmentoStartIndex, segmentoEndIndex);
       const segmentoToUse = getWhichSegmentoToUse(allSegmentos, segmentoUpperCase);
 
-      if (name) {
-        if (searchEmpresaName(allSegmentos, name)) {
-          if (!oneResultFound) {
-            oneResultFound = !oneResultFound;
-            log(`Mostrando resultado(s) para busca "${name}":`);
-          }
+      if (name) { shouldCountEntry = searchEmpresaName(allSegmentos, name) !== null; }
 
-          log(messageLog(segmentoToUse, segmentoUpperCase, from, to));
-        }
-      } else {
-        if (!oneResultFound) {
-          oneResultFound = !oneResultFound;
-          log('Mostrando resultado(s):');
-        }
+      if (shouldCountEntry) {
         log(messageLog(segmentoToUse, segmentoUpperCase, from, to));
       }
 
+      shouldCountEntry += true;
       segmentoStartIndex += segmentoSize;
       segmentoEndIndex += segmentoSize;
     }
