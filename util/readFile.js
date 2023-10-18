@@ -47,12 +47,20 @@ export default (filePath, {
       const allSegmentos = sliceArrayPosition(cnabArray, segmentoStartIndex, segmentoEndIndex);
       const segmentoToUse = getWhichSegmentoToUse(allSegmentos, segmentoUpperCase);
 
-      if (searchEmpresaName(allSegmentos, name)) {
+      if (name) {
+        if (searchEmpresaName(allSegmentos, name)) {
+          if (!oneResultFound) {
+            oneResultFound = !oneResultFound;
+            log(`Mostrando resultado(s) para busca "${name}":`);
+          }
+
+          log(messageLog(segmentoToUse, segmentoUpperCase, from, to));
+        }
+      } else {
         if (!oneResultFound) {
           oneResultFound = !oneResultFound;
-          log(`Mostrando resultado(s) para busca "${name}":`);
+          log('Mostrando resultado(s):');
         }
-
         log(messageLog(segmentoToUse, segmentoUpperCase, from, to));
       }
 
