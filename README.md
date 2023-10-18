@@ -50,6 +50,12 @@ node cnabRows.js -F "file:///home/$USER/cnabBuilder/cnabExample.rem" -f 21 -t 34
 
 * pesquisar por nome da empresa, e mostrar em que posição que ela foi achada e qual o tipo de segmento ela pertence.
 
+O nome do arquivo pode ser passado através do arg opcional -n ou --name. Ele filtrará o resultado das posições e segmento conforme forem encontradas empresas cujo nome batem com o nome pesquisado, ou seja, o resultado em si será o mesmo mas com o filtro conforme o que for encontrado nos segmentos Q de cada entrada. 
+Exemplo: 
+```bash
+node cnabRows.js -F "file:///home/$USER/cnabBuilder/cnabExample.rem" -f 21 -t 34 -s p -n Rede
+```
+
 * **Bonus**, ler o cnab e escrever um novo arquivo em formato JSON, contendo nome e endereço da empresa.
 
 O candidato tem total liberdade de mudar a estrutura atual desse projeto, a ideía é ver a criatividade de resolver esse problema.
