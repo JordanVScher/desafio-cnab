@@ -61,7 +61,8 @@ export default (filePath, {
     }
 
     if (!oneResultFound) {
-      log(`Nenhum resultado encontrado para busca "${name}"!`);
+      if (name) log(`Nenhum resultado encontrado para busca "${name}"!`);
+      else log('Nenhum resultado encontrado');
     }
   } catch (e) {
     console.error(`🚀 ~ ${e.stack}`);
