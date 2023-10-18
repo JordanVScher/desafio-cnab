@@ -1,10 +1,18 @@
 import optionsYargs from './config/optionsYargs.js';
 import getFileName from './util/getFileName.js';
+import checkValidPath from './util/checkValidPath.js';
 import readFile from './util/readFile.js';
 
-const asyncReadingTimeLog = 'asyncReading';
-const fileName = getFileName(optionsYargs.file);
+const processCNABFile = (fileUrl) => {
+  const asyncReadingTimeLog = 'asyncReading';
 
-console.time(asyncReadingTimeLog);
-readFile(fileName, optionsYargs);
-console.timeEnd(asyncReadingTimeLog);
+  const fileName = getFileName(fileUrl);
+
+  checkValidPath(fileName);
+
+  console.time(asyncReadingTimeLog);
+  readFile(fileName, optionsYargs);
+  console.timeEnd(asyncReadingTimeLog);
+};
+
+processCNABFile(optionsYargs.file);

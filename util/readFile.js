@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import sliceArrayPosition from './sliceArrayPosition.js';
 import messageLog from './messageLog.js';
 
@@ -6,14 +6,7 @@ const segmentoDictionary = { P: 0, Q: 1, R: 2 };
 const companyNameIndexStart = 33;
 const companyNameIndexEnd = 73;
 
-const { log, error } = console;
-
-const checkValidPath = (filePath) => {
-  if (!existsSync(filePath)) {
-    error(`Error: File on path "${filePath}" not found`);
-    process.exit(1);
-  }
-};
+const { log } = console;
 
 const getWhichSegmentoToUse = (allSegmentos, segmentoType) => {
   const segmentoIndex = segmentoDictionary[segmentoType];
@@ -33,7 +26,6 @@ export default (filePath, {
 }) => {
   try {
     const segmentoUpperCase = segmento.toUpperCase();
-    checkValidPath(filePath);
 
     const file = readFileSync(filePath, 'utf8');
     const cnabArray = file.split('\n');
@@ -72,6 +64,6 @@ export default (filePath, {
       log(`Nenhum resultado encontrado para busca "${name}"!`);
     }
   } catch (e) {
-    error(`🚀 ~ ${e.stack}`);
+    console.error(`🚀 ~ ${e.stack}`);
   }
 };
