@@ -1,3 +1,9 @@
 import { fileURLToPath } from 'url';
 
-export default (fileURL) => fileURLToPath(fileURL);
+export default (fileURL) => {
+  try {
+    return fileURLToPath(fileURL);
+  } catch (e) {
+    return fileURL;
+  }
+};

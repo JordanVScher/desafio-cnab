@@ -6,7 +6,7 @@ export default yargs(process.argv.slice(2))
     alias: 'n', describe: 'nome da empresa a ser buscado', type: 'string', demandOption: false,
   })
   .option('file', {
-    alias: 'F', describe: 'URL do arquivo Cnab a ser lido', type: 'string', demandOption: true,
+    alias: 'F', describe: 'URL ou path do arquivo Cnab a ser lido', type: 'string', demandOption: true,
   })
   .option('f', {
     alias: 'from', describe: 'posição inicial de pesquisa da linha do Cnab', type: 'number', demandOption: true,
