@@ -1,10 +1,15 @@
 import { readFileSync } from 'fs';
 import sliceArrayPosition from './sliceArrayPosition.js';
 import messageLog from './messageLog.js';
+import saveJsonFile from './saveJsonFile.js';
 
 const segmentoDictionary = { P: 0, Q: 1, R: 2 };
 const companyNameIndexStart = 33;
 const companyNameIndexEnd = 72;
+const companyAddressIndexStart = 73;
+const companyAddressIndexEnd = 154;
+const companyIdIndexStart = 1;
+const companyIdIndexEnd = 15;
 
 const { log } = console;
 
@@ -21,8 +26,17 @@ const searchEmpresaName = (allSegmentos, empresaName) => {
   return segmentoQName.match(empresaNameRegex);
 };
 
+const getEmpresaJsonData = (allSegmentos) => {
+  const cnabSegmentoQ = allSegmentos[segmentoDictionary.Q];
+  const segmentoQName = cnabSegmentoQ.substring(companyNameIndexStart, companyNameIndexEnd);
+  const segmentoQAdr = cnabSegmentoQ.substring(companyAddressIndexStart, companyAddressIndexEnd);
+  const segmentoQId = cnabSegmentoQ.substring(companyIdIndexStart, companyIdIndexEnd);
+
+  return { id: segmentoQId, name: segmentoQName, address: segmentoQAdr };
+};
+
 export default (filePath, {
-  segmento, from, to, name,
+  segmento, from, to, name, json,
 }) => {
   try {
     const segmentoUpperCase = segmento.toUpperCase();
@@ -30,6 +44,7 @@ export default (filePath, {
     const file = readFileSync(filePath, 'utf8');
     const cnabArray = file.split('\n');
 
+    const jsonToSave = {};
     let oneResultFound = false;
     let shouldCountEntry = true;
     const segmentoSize = 3;
@@ -49,6 +64,13 @@ export default (filePath, {
       if (name) { shouldCountEntry = searchEmpresaName(allSegmentos, name) !== null; }
 
       if (shouldCountEntry) {
+        if (json) {
+          const jsonDataToAdd = getEmpresaJsonData(allSegmentos);
+          jsonToSave[jsonDataToAdd.id] = {
+            name: jsonDataToAdd.name,
+            address: jsonDataToAdd.address,
+          };
+        }
         log(messageLog(segmentoToUse, segmentoUpperCase, from, to));
       }
 
@@ -60,6 +82,8 @@ export default (filePath, {
     if (!oneResultFound) {
       if (name) log(`Nenhum resultado encontrado para busca "${name}"!`);
       else log('Nenhum resultado encontrado');
+    } else if (json) {
+      saveJsonFile(jsonToSave, name);
     }
   } catch (e) {
     console.error(`🚀 ~ ${e.stack}`);
