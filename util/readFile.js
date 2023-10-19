@@ -1,39 +1,10 @@
 import { readFileSync } from 'fs';
 import sliceArrayPosition from './sliceArrayPosition.js';
 import messageLog from './messageLog.js';
+import * as segmentoExtractor from './segmentoExtractor.js';
 import saveJsonFile from './saveJsonFile.js';
 
-const segmentoDictionary = { P: 0, Q: 1, R: 2 };
-const companyNameIndexStart = 33;
-const companyNameIndexEnd = 72;
-const companyAddressIndexStart = 73;
-const companyAddressIndexEnd = 154;
-const companyIdIndexStart = 1;
-const companyIdIndexEnd = 15;
-
 const { log } = console;
-
-const getWhichSegmentoToUse = (allSegmentos, segmentoType) => {
-  const segmentoIndex = segmentoDictionary[segmentoType];
-  return allSegmentos[segmentoIndex];
-};
-
-const searchEmpresaName = (allSegmentos, empresaName) => {
-  const cnabSegmentoQ = allSegmentos[segmentoDictionary.Q];
-  const segmentoQName = cnabSegmentoQ.substring(companyNameIndexStart, companyNameIndexEnd);
-  const empresaNameRegex = new RegExp(empresaName, 'gsi');
-
-  return segmentoQName.match(empresaNameRegex);
-};
-
-const getEmpresaJsonData = (allSegmentos) => {
-  const cnabSegmentoQ = allSegmentos[segmentoDictionary.Q];
-  const segmentoQName = cnabSegmentoQ.substring(companyNameIndexStart, companyNameIndexEnd);
-  const segmentoQAdr = cnabSegmentoQ.substring(companyAddressIndexStart, companyAddressIndexEnd);
-  const segmentoQId = cnabSegmentoQ.substring(companyIdIndexStart, companyIdIndexEnd);
-
-  return { id: segmentoQId, name: segmentoQName, address: segmentoQAdr };
-};
 
 export default (filePath, {
   segmento, from, to, name, json,
@@ -59,13 +30,18 @@ export default (filePath, {
       }
 
       const allSegmentos = sliceArrayPosition(cnabArray, segmentoStartIndex, segmentoEndIndex);
-      const segmentoToUse = getWhichSegmentoToUse(allSegmentos, segmentoUpperCase);
+      const segmentoToUse = segmentoExtractor.getWhichSegmentoToUse(
+        allSegmentos,
+        segmentoUpperCase,
+      );
 
-      if (name) { shouldCountEntry = searchEmpresaName(allSegmentos, name) !== null; }
+      if (name) {
+        shouldCountEntry = segmentoExtractor.searchEmpresaName(allSegmentos, name) !== null;
+      }
 
       if (shouldCountEntry) {
         if (json) {
-          const jsonDataToAdd = getEmpresaJsonData(allSegmentos);
+          const jsonDataToAdd = segmentoExtractor.getEmpresaJsonData(allSegmentos);
           jsonToSave[jsonDataToAdd.id] = {
             name: jsonDataToAdd.name,
             address: jsonDataToAdd.address,
