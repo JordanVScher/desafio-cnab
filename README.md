@@ -58,4 +58,12 @@ node cnabRows.js -F "file:///home/$USER/cnabBuilder/cnabExample.rem" -f 21 -t 34
 
 * **Bonus**, ler o cnab e escrever um novo arquivo em formato JSON, contendo nome e endereço da empresa.
 
+O JSON será criado se passado o arg opcional -j ou --json. Essa funcionalidade pode funcionar em conjunto com a busca por nome ou com todos os resultados. Os arquivos json ficam salvos na pasta 'results'.
+```bash
+node cnabRows.js -F "file:///home/$USER/cnabBuilder/cnabExample.rem" -f 21 -t 34 -s p -n Rede -j
+```
+
+Presume-se que o arquivo lido não será grande o bastante para estourar a memória da aplicação, dessa forma, nem a leitura do arquivo nem a criação do json ocorrem através de streams.
+
+
 O candidato tem total liberdade de mudar a estrutura atual desse projeto, a ideía é ver a criatividade de resolver esse problema.
