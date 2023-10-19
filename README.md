@@ -42,10 +42,15 @@ desafio consiste:
 
 * poder passar na CLI o local do arquivo.
 
-A URL do arquivo pode ser passada através do arg -F ou --file
+A URL do arquivo pode ser passada através do arg -F ou --file.
 Exemplo: 
 ```bash
 node cnabRows.js -F "file:///home/$USER/cnabBuilder/cnabExample.rem" -f 21 -t 34 -s p
+```
+
+O path também é aceitável.
+```bash
+node cnabRows.js -F "./cnabExample.rem" -f 21 -t 34 -s p
 ```
 
 * pesquisar por nome da empresa, e mostrar em que posição que ela foi achada e qual o tipo de segmento ela pertence.
