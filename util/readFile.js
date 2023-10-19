@@ -4,7 +4,7 @@ import messageLog from './messageLog.js';
 
 const segmentoDictionary = { P: 0, Q: 1, R: 2 };
 const companyNameIndexStart = 33;
-const companyNameIndexEnd = 73;
+const companyNameIndexEnd = 72;
 
 const { log } = console;
 
